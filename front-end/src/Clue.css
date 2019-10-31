@@ -1,0 +1,26 @@
+.Clue-Li {
+    border-left: 10px solid transparent;
+    cursor: pointer;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    padding: 5px 1px;
+  }
+  
+  .Clue-Li>span {
+    line-height: 1.4;
+    margin-right: 5px;
+  }
+  
+  .Clue-Label {
+    font-weight: 700;
+    margin-right: 10px;
+    text-align: right;
+    min-width: 24px;
+    width: 24px;
+  }
+  
+  .Clue-Text {
+    margin-left: 5px;
+  }
