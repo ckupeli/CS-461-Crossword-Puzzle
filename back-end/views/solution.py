@@ -52,7 +52,7 @@ def get_new_clue_from_solution(solution):
   # Wordnet
   new_clue = ''
   try:
-    html_wordnet = requests.get('http://wordnetweb.princeton.edu/perl/webwn?s=' + solution).text
+    html_wordnet = requests.get('http://wordnetweb.princeton.edu/perl/webwn?s=' + solution.lower()).text
     b_soup = BeautifulSoup(html_wordnet, 'html.parser')
     # Get rid of a's, b's, i's
     [x.extract() for x in b_soup.find_all('a')]
@@ -72,15 +72,21 @@ def get_new_clue_from_solution(solution):
     try:
       html_famous = requests.get('https://www.famousbirthdays.com/names/' + solution.lower() + '.html').text
       b_soup_famous = BeautifulSoup(html_famous, 'html.parser')
-      href = b_soup_famous.find('a', {'class' : 'face person-item'}).get('href')
-      html_famous_person = requests.get(href).text
-      b_soup_famous_person = BeautifulSoup(html_famous_person, 'html.parser')
-      [x.replace_with(x.text) for x in b_soup_famous_person.find_all('a')]
-      # Replace nonbreak space with regular space
-      new_clue = b_soup_famous_person.find('p').text[:-2].replace('\xa0', ' ') # \xa0 is unicode of nonbreak space
-      print(new_clue)
+      if(b_soup_famous.find(text = 'Oops!') != None):
+        href = b_soup_famous.find('a', {'class' : 'face person-item'}).get('href')
+        html_famous_person = requests.get(href).text
+        b_soup_famous_person = BeautifulSoup(html_famous_person, 'html.parser')
+        [x.replace_with(x.text) for x in b_soup_famous_person.find_all('a')]
+        # Replace nonbreak space with regular space
+        new_clue = b_soup_famous_person.find('p').text[:-2].replace('\xa0', ' ') # \xa0 is unicode of nonbreak space
     except:
-      new_clue = ''
+      # Not a famous person, search at lexico
+      try:
+        html_lexico = requests.get('https://www.lexico.com/en/definition/' + solution.lower()).text
+        b_soup_lexico = BeautifulSoup(html_lexico, 'html.parser')
+        new_clue = b_soup_lexico.find('span', {'class' : 'ind'}).text[:-1]
+      except:  
+        new_clue = ''
   return new_clue
 
 # API calls
