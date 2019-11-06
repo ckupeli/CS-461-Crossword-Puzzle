@@ -3,6 +3,7 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 import requests
 import math
+import wordninja
 
 # Define blueprint
 solution = Blueprint('solution', __name__)
@@ -48,45 +49,66 @@ def solution_crawler():
         solutions[i.text + 'A'] = ''.join(puzzle[temp_i:temp_i + 5])
   return puzzle, solutions
 
-def get_new_clue_from_solution(solution):
+def get_new_clue_from_solution(puzzle_solution):
   # Wordnet
   new_clue = ''
-  try:
-    html_wordnet = requests.get('http://wordnetweb.princeton.edu/perl/webwn?s=' + solution.lower()).text
-    b_soup = BeautifulSoup(html_wordnet, 'html.parser')
-    # Get rid of a's, b's, i's
-    [x.extract() for x in b_soup.find_all('a')]
-    [x.extract() for x in b_soup.find_all('b')]
-    [x.extract() for x in b_soup.find_all('i')]
-    new_clue_html = b_soup.find('li')
-    new_clue = new_clue_html.text
-    new_clue = new_clue[:-2]
-    i = 1
-    for l in new_clue:
-      if(l == '('):
-        new_clue = new_clue[i].upper() + new_clue[i + 1:]
-        break
-      i = i + 1
-  except:
-    # Wordnet does not exist, search for famous people
+  # Detect words like ALLIN (ALLIN = ALL IN)
+  split_solution = ' '.join(wordninja.split(puzzle_solution)) # This part might cause some bugs, make sure it works
+  
+  for solution in [puzzle_solution, split_solution]:
+    if(new_clue != ''):
+      break
     try:
-      html_famous = requests.get('https://www.famousbirthdays.com/names/' + solution.lower() + '.html').text
-      b_soup_famous = BeautifulSoup(html_famous, 'html.parser')
-      if(b_soup_famous.find(text = 'Oops!') != None):
-        href = b_soup_famous.find('a', {'class' : 'face person-item'}).get('href')
-        html_famous_person = requests.get(href).text
-        b_soup_famous_person = BeautifulSoup(html_famous_person, 'html.parser')
-        [x.replace_with(x.text) for x in b_soup_famous_person.find_all('a')]
-        # Replace nonbreak space with regular space
-        new_clue = b_soup_famous_person.find('p').text[:-2].replace('\xa0', ' ') # \xa0 is unicode of nonbreak space
+      html_lexico = requests.get('https://www.lexico.com/en/definition/' + solution.lower()).text
+      b_soup_lexico = BeautifulSoup(html_lexico, 'html.parser')
+      new_clue = b_soup_lexico.find('span', {'class' : 'ind'}).text[:-1]
+      if(new_clue.lower().find(solution.lower()) != -1):
+        raise Exception('Clue contains solution')
     except:
-      # Not a famous person, search at lexico
+      # Wordnet does not exist, search for famous people
       try:
-        html_lexico = requests.get('https://www.lexico.com/en/definition/' + solution.lower()).text
-        b_soup_lexico = BeautifulSoup(html_lexico, 'html.parser')
-        new_clue = b_soup_lexico.find('span', {'class' : 'ind'}).text[:-1]
-      except:  
-        new_clue = ''
+        html_famous = requests.get('https://www.famousbirthdays.com/names/' + solution.lower() + '.html').text
+        b_soup_famous = BeautifulSoup(html_famous, 'html.parser')
+        if(b_soup_famous.find(text = 'Oops!') != None):
+          href = b_soup_famous.find('a', {'class' : 'face person-item'}).get('href')
+          html_famous_person = requests.get(href).text
+          b_soup_famous_person = BeautifulSoup(html_famous_person, 'html.parser')
+          [x.replace_with(x.text) for x in b_soup_famous_person.find_all('a')]
+          # Replace nonbreak space with regular space
+          new_clue = b_soup_famous_person.find('p').text[:-2].replace('\xa0', ' ') # \xa0 is unicode of nonbreak space
+        if(new_clue.lower().find(solution.lower()) != -1):
+          raise Exception('Clue contains solution')
+      except:
+        # Not a famous person, search at lexico
+        try:
+          html_wordnet = requests.get('http://wordnetweb.princeton.edu/perl/webwn?s=' + solution.lower()).text
+          b_soup = BeautifulSoup(html_wordnet, 'html.parser')
+          # Get rid of a's, b's, i's
+          [x.extract() for x in b_soup.find_all('a')]
+          [x.extract() for x in b_soup.find_all('b')]
+          [x.extract() for x in b_soup.find_all('i')]
+          new_clue_html = b_soup.find('li')
+          new_clue = new_clue_html.text
+          new_clue = new_clue[:-2]
+          i = 1
+          for l in new_clue:
+            if(l == '('):
+              new_clue = new_clue[i].upper() + new_clue[i + 1:]
+              break
+            i = i + 1
+          if(new_clue.lower().find(solution.lower()) != -1):
+            raise Exception('Clue contains solution')
+        except:
+          # Check Urban Dictionary for the last resource
+          try:
+            html_urban = requests.get('https://www.urbandictionary.com/define.php?term=' + solution.lower()).text
+            b_soup_urban = BeautifulSoup(html_urban, 'html.parser')
+            new_clue = b_soup_urban.find('div', {'class' : 'meaning'}).text
+            new_clue = new_clue[0].upper() + new_clue[1:]
+            if(new_clue.lower().find(solution.lower()) != -1):
+              raise Exception('Clue contains solution')
+          except:
+            new_clue = ''
   return new_clue
 
 # API calls
