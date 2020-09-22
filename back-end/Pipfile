@@ -7,10 +7,9 @@ verify_ssl = true
 
 [packages]
 flask = "*"
-requests = "*"
 beautifulsoup4 = "*"
+flask-cors = "*"
 selenium = "*"
-wordninja = "*"
 
 [requires]
 python_version = "3.7"

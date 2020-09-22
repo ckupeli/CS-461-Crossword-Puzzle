@@ -1,0 +1,6 @@
+wordnet 83
+merriam 27
+cambridge 20
+famous 12
+wiki 3
+urban 7

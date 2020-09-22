@@ -5,13 +5,12 @@ def create_app():
   app = Flask(__name__)
   CORS(app)
 
-  from .views.clue import clue
-  app.register_blueprint(clue)
-
-  from .views.cell import cell
-  app.register_blueprint(cell)
-
-  from .views.solution import solution
-  app.register_blueprint(solution)
+  from .views.puzzle import puzzle
+  app.register_blueprint(puzzle)
 
   return app
+
+# pipenv shell
+# export FLASK_DEBUG=0
+# export FLASK_APP=./
+# flask run
