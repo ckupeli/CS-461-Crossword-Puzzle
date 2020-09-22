@@ -1,20 +1,12 @@
 .Cell-Cell {
-    fill: #fff;
-  }
-  
-  .Cell-Block {
-    fill: #000;
-  }
-  
-  .Cell-Selected {
-    fill: #ffda00;
-  }
-  
-  .Cell-Highlighted {
-    fill: #a7d8ff;
-  }
-  
-  text {
-    -webkit-transition: font-size .1s;
-    transition: font-size .1s;
-  }
+  fill: #fff;
+}
+
+.Cell-Block {
+  fill: #000;
+}
+
+text {
+  -webkit-transition: font-size .1s;
+  transition: font-size .1s;
+}

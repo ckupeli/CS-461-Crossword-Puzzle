@@ -4,21 +4,13 @@ import "./Cell.css";
 class Cell extends Component {
   render() {
     return (
-      <g onClick={() => this.props.mouseClick(this.state.index)}>
+      <g>
         {
-          this.props.type === 'Block' &&
+          this.props.type === 'block' &&
           <rect role="cell" className={"Cell-Block"} x={(this.props.index % 5) * 100 + 3} y={~~(this.props.index / 5) * 100 + 3} width="100.00" height="100.00"></rect>
         }
         {
-          this.props.type === 'Highlighted' &&
-          <rect role="cell" className={"Cell-Highlighted"} x={(this.props.index % 5) * 100 + 3} y={~~(this.props.index / 5) * 100 + 3} width="100.00" height="100.00"></rect>
-        }
-        {
-          this.props.type === 'Selected' &&
-          <rect role="cell"  className={"Cell-Selected"} x={(this.props.index % 5) * 100 + 3} y={~~(this.props.index / 5) * 100 + 3} width="100.00" height="100.00"></rect>
-        }
-        {
-          this.props.type === 'Cell' &&
+          this.props.type === 'regular' &&
           <rect role="cell"  className={"Cell-Cell"} x={(this.props.index % 5) * 100 + 3} y={~~(this.props.index / 5) * 100 + 3} width="100.00" height="100.00"></rect>
         }
         {

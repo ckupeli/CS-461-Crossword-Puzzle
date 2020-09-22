@@ -1,62 +1,3 @@
-.Puzzle-Header-Wrapper {
-  margin: 0 22px;
-  border-bottom: 1px solid #e6e6e6;
-}
-
-.Puzzle-Header-Row {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -ms-flex-align: top;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  margin: 20px auto;
-}
-
-.Puzzle-Details {
-  font-weight: 200;
-}
-
-.Puzzle-Details-Main {
-  font-size: 40px;
-  font-size: 2.5rem;
-  line-height: 52px;
-  line-height: 3.25rem;
-}
-
-.Puzzle-Details-Main>span {
-  font-weight: 700;
-}
-
-.Puzzle-Details-Secondary {
-  font-size: 14px;
-  font-size: .875rem;
-  line-height: 18.2px;
-  line-height: 1.1375rem;
-  color: #333;
-}
-
-.Puzzle-Details-Secondary>span {
-  margin-left: 8px;
-}
-
-.Puzzle-Details-Secondary>span::before {
-  font-size: 15px;
-  font-size: .9375rem;
-  line-height: 19.5px;
-  line-height: 1.21875rem;
-  content: "\25AA";
-  margin-right: 8px;
-}
-
 .Puzzle-Layout {
   -webkit-box-align: start;
   -webkit-align-items: flex-start;
@@ -70,6 +11,7 @@
   margin: auto;
   max-width: 1132px;
   padding: 10px;
+  margin-top: 50px;
 }
 
 .Puzzle-Layout>* {
@@ -155,12 +97,12 @@ svg:not(:root) {
   -webkit-justify-content: space-around;
   -ms-flex-pack: distribute;
   justify-content: space-around;
-  max-height: 625px;
+  max-height: 100%;
 }
 
 .ClueList-Wrapper {
   width: 47%;
-  height: 100%;
+  min-height: 50%;
 }
 
 .ClueList-Title {
